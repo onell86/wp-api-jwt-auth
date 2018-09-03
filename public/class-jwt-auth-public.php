@@ -228,6 +228,12 @@ class Jwt_Auth_Public
          */
         $auth = isset($_SERVER['HTTP_AUTHORIZATION']) ?  $_SERVER['HTTP_AUTHORIZATION'] : false;
 
+        if(!$auth && function_exists('apache_request_headers')){
+            $authHeaders = apache_request_headers();
+			if(is_array($authHeaders) && array_key_exists('Authorization', $authHeaders)){
+            	$auth = $authHeaders['Authorization'];
+			}
+        }
 
         /* Double check for different auth header string (server dependent) */
         if (!$auth) {
